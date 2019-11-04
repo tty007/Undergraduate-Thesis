@@ -32,6 +32,30 @@ while count < 10:
 つまり後ろの3つは使わない．サンプリングレートは**10Hz(0.1s)**
 ⇨とにかくデータを大量に取ってきて，ダウンサンプリングすればいいのでは？
 
+# 並列/並行処理の実装
+実装に関しては並行処理を行う．プロセスブールを用いる．最初に同時に動かす最大数 max_workers を決めるとプロセスを使いまわしてくれる(Python 3.2以降)
+## マシンのスペック
+ Hardware Overview:
+    - Model Name: iMac
+    - Model Identifier: iMac19,2
+    - Processor Name: Intel Core i7
+    - Processor Speed: 3.2 GHz
+    - Number of Processors: 1
+    - Total Number of Cores: 6
+    - L2 Cache (per Core): 256 KB
+    - L3 Cache: 12 MB
+    - Hyper-Threading Technology: Enabled
+    - Memory: 16 GB
+    - Boot ROM Version: 220.260.170.0.0
+    - SMC Version (system): 2.47f2
+    - Serial Number (system): C02YN0VTJWF1
+    - Hardware UUID: F2E1D100-B78B-5D5D-BF56-7463E6DA0546
+```
+machdep.cpu.core_count: 6
+machdep.cpu.thread_count: 12
+```
+総コア数6, 総スレッド数12が制約条件
+
 
 # Todo
 ・proc/statから数値情報を取ってきて，CPU_loadを計算
