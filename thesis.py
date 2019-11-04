@@ -7,7 +7,7 @@ import csv
 
 
 # CSVの書き込み
-with open("test.csv", "w", newline="") as f:
+with open("csv_data/test.csv", "w", newline="") as f:
 
     # 要素順を指定します（dictでは順序がわからないため）（フィールドにタイムスタンプも追加）
     fieldnames = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'time']
@@ -62,4 +62,3 @@ with open("test.csv", "w", newline="") as f:
 
         # writerowで1行分を出力
         writer.writerow(cpu_all)
-
