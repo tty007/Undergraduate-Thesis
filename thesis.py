@@ -40,11 +40,11 @@ def cpu_info(cpu_id):
             cpu_info.update(time)
             writer.writerow(cpu_info)
 
-# マルチプロセス用メソッド
+# オクタコアマルチプロセス用メソッド
 def multi_process_cpu():
-    # 6スレッドで実行
+    # 10スレッドで実行
     thread = Pool(10)
-    # 0-5の範囲でcpu_infoをマルチプロセスで実行
+    # 0-9の範囲でcpu_infoをマルチプロセスで実行
     thread.map(cpu_info, range(9))
 
 # CPU情報取得メソッド
