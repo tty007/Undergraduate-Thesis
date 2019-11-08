@@ -1,4 +1,5 @@
 import time
+import timeout_decorator
 from multiprocessing import Pool
 import subprocess
 import re
@@ -17,6 +18,7 @@ def get_cpu_scaling_freq(cpu_id):
 
 # CPU_ID/ =0:cpu_all(全体の合計), =1:cpu_1, =2:cpu_2, =3:cpu_3, =4:cpu_4/CPU_load+freq取得関連メソッド
 # CPUそれぞれの関数を一つにまとめて簡略化&リサイクル
+@timeout_decorator.timeout(8)
 def cpu_info(cpu_id):
     with open("csv_data/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
         fieldnames = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'cpu_scaling_freq', 'time']
@@ -48,7 +50,8 @@ def multi_process_cpu():
     thread.map(cpu_info, range(9))
 
 # CPU情報取得メソッド
-multi_process_cpu()
+if __name__ == '__main__':
+    multi_process_cpu()
 
 
 

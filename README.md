@@ -56,6 +56,25 @@ if __name__ == '__main__':
 ### 並列処理
 ある1つの時点で、実際に、物理的に、複数の仕事をしていること。使用用途としては**速く**することが目的。
 
+# タイムアウトの実装
+自作でデコレーターを作成しようと思ったが，Pythonのライブラリに便利そうなtimeout-decoratorというものがあったのでそれを採用した．
+[pnpnpn/timeout-decorator](https://github.com/pnpnpn/timeout-decorator)
+## Usage
+> 
+```
+import time
+import timeout_decorator
+
+@timeout_decorator.timeout(5)
+def mytest():
+    print("Start")
+    for i in range(1,10):
+        time.sleep(1)
+        print("{} seconds have passed".format(i))
+
+if __name__ == '__main__':
+    mytest()
+```
 
 ## マシンのスペック
  Hardware Overview:
