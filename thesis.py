@@ -7,7 +7,6 @@ import datetime
 import csv
 
 
-
 # cpu_id:1-8/CPU_scaling_freq取得メソッド
 # 8コア目のCPUスケーリング周波数を取得
 # print(get_cpu_scaling_freq(8))
