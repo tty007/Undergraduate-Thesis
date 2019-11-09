@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import time
 import timeout_decorator
 from multiprocessing import Pool
@@ -5,6 +6,12 @@ import subprocess
 import re
 import datetime
 import csv
+
+
+def load_webpage(url):
+    subprocess.call("adb shell am start \
+        -n com.android.chrome/com.google.android.apps.chrome.Main \
+        -d {}".format(url), shell=True)
 
 
 # cpu_id:1-8/CPU_scaling_freq取得メソッド
@@ -18,11 +25,15 @@ def get_cpu_scaling_freq(cpu_id):
 # CPU_ID/ =0:cpu_all(全体の合計), =1:cpu_1, =2:cpu_2, =3:cpu_3, =4:cpu_4/CPU_load+freq取得関連メソッド
 # CPUそれぞれの関数を一つにまとめて簡略化&リサイクル
 @timeout_decorator.timeout(8)
-def cpu_info(cpu_id):
+def cpu_info(cpu_id, url='https://yahoo.co.jp'):
     with open("csv_data/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
         fieldnames = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'cpu_scaling_freq', 'time']
         writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=",", quotechar='"', lineterminator='\n')
         writer.writeheader()
+
+        # ここでページをロード
+        load_webpage(url)
+
         while True:
             cpu_load_related = str(subprocess.check_output("adb shell cat proc/stat | grep cpu", shell=True))
             cpu_load_related_array = re.split('cpu[0-9]*\s+', cpu_load_related)

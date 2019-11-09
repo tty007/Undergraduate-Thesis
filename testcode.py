@@ -6,11 +6,15 @@ import datetime
 import csv
 
 
-def get_cpu_scaling_freq(cpu_id):
-    cpu_id -= 1
-    cpu_scaling_freq = str(subprocess.check_output("adb shell cat sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(cpu_id), shell=True).decode('utf-8'))
-    print(cpu_scaling_freq.replace('\n',''))
-    return cpu_scaling_freq
+def load_webpage(url):
+    subprocess.call("adb shell am start \
+        -n com.android.chrome/com.google.android.apps.chrome.Main \
+        -d {}".format(url), shell=True)
 
 
-print(get_cpu_scaling_freq(1))
+load_webpage('https://yahoo.co.jp')
+
+
+# キャッシュを削除すると初回起動画面となりページをロードできない
+# subprocess.call("adb shell pm clear com.android.chrome", shell=True)
+# adb shell am force-stop com.example.package:com.android.chrome
