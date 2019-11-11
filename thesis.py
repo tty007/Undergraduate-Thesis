@@ -51,6 +51,3 @@ def multi_process_cpu():
 # CPU情報取得メソッド
 if __name__ == '__main__':
     multi_process_cpu()
-
-
-
