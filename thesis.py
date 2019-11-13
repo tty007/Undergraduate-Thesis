@@ -55,28 +55,34 @@ def cpu_info(cpu_id):
             writer.writerow(cpu_info)
 
 # オクタコアマルチプロセス用メソッド
-def multi_process_cpu(url):
+def multi_process_cpu(url, load_num_s, load_num):
     # 10スレッドで実行
     thread = Pool(10)
     # ここでページをロード...関数を9回起動するので，cpu_info内に書くとタブが9回開いてしまう
     load_webpage(url)
-    # thread.map(cpu_info, range(9))
 
-    load_times = 10
-    times = 1
-    cpu_num_list = []
     # タイムアウトでファイル実行が中止になってしまう為，エラーハンドリングが必要
-    for times in range (1, load_times):
+    cpu_num_list = []
+    try:
         for cpu_num in range(9):
-            file_num = str(cpu_num) + '_' + str(times)
+            file_num = str(cpu_num) + '_' + str(load_num_s)
             cpu_num_list.append(file_num)
             cpu_num += 1
+
         thread.map(cpu_info, cpu_num_list)
-        load_times += 1
-    
+    except timeout_decorator.timeout_decorator.TimeoutError:
+        time.sleep(1)
+        if load_num_s <= (load_num-1):
+            print('TimeoutErrror, but retry this code onemore.')
+            load_num_s += 1
+            multi_process_cpu(url=url, load_num_s=load_num_s, load_num=load_num)
+        else:
+            print('\n\n==========\nThis code finished successfully. Data collected to "csv_data" folder.\n==========\n\n')
+            pass
 
 
 # =========実行==========
 # CPU情報取得メソッド
 if __name__ == '__main__':
-    multi_process_cpu(url='https://google.co.jp')
+    # 1-5回webページをロードして記録
+    multi_process_cpu(url='https://google.co.jp', load_num_s=1, load_num=5)
