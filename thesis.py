@@ -6,6 +6,7 @@ import subprocess
 import re
 import datetime
 import csv
+from functools import partial
 
 
 def load_webpage(url):
@@ -18,6 +19,8 @@ def load_webpage(url):
 # 8コア目のCPUスケーリング周波数を取得
 # print(get_cpu_scaling_freq(8))
 def get_cpu_scaling_freq(cpu_id):
+    cpu_id_s = str(cpu_id)
+    cpu_id = int(cpu_id_s[0])
     cpu_id -= 1
     cpu_scaling_freq = str(subprocess.check_output("adb shell cat sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq".format(cpu_id), shell=True).decode('utf-8'))
     return cpu_scaling_freq.replace('\n','')
@@ -25,19 +28,18 @@ def get_cpu_scaling_freq(cpu_id):
 # CPU_ID/ =0:cpu_all(全体の合計), =1:cpu_1, =2:cpu_2, =3:cpu_3, =4:cpu_4/CPU_load+freq取得関連メソッド
 # CPUそれぞれの関数を一つにまとめて簡略化&リサイクル
 @timeout_decorator.timeout(8)
-def cpu_info(cpu_id, url='https://yahoo.co.jp'):
+def cpu_info(cpu_id):
     with open("csv_data/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
         fieldnames = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'cpu_scaling_freq', 'time']
         writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=",", quotechar='"', lineterminator='\n')
         writer.writeheader()
 
-        # ここでページをロード
-        load_webpage(url)
-
         while True:
             cpu_load_related = str(subprocess.check_output("adb shell cat proc/stat | grep cpu", shell=True))
             cpu_load_related_array = re.split('cpu[0-9]*\s+', cpu_load_related)
             del cpu_load_related_array[0]
+            cpu_id_s = str(cpu_id)
+            cpu_id = int(cpu_id_s[0])
             cpu_info = cpu_load_related_array[cpu_id].split()[0:8]
             # cpi_idが0でなければ，(1-8であれば)cpu_scaling_freqを取得
             if cpu_id >= 1 and cpu_id <= 8:
@@ -53,15 +55,15 @@ def cpu_info(cpu_id, url='https://yahoo.co.jp'):
             writer.writerow(cpu_info)
 
 # オクタコアマルチプロセス用メソッド
-def multi_process_cpu():
+def multi_process_cpu(url):
     # 10スレッドで実行
     thread = Pool(10)
-    # 0-9の範囲でcpu_infoをマルチプロセスで実行
+    # ここでページをロード...関数を9回起動するので，cpu_info内に書くとタブが9回開いてしまう
+    load_webpage(url)
     thread.map(cpu_info, range(9))
 
+
+# =========実行==========
 # CPU情報取得メソッド
 if __name__ == '__main__':
-    multi_process_cpu()
-
-
-
+    multi_process_cpu(url='https://google.co.jp')
