@@ -6,7 +6,6 @@ import subprocess
 import re
 import datetime
 import csv
-from functools import partial
 
 
 def load_webpage(url):
@@ -85,4 +84,4 @@ def multi_process_cpu(url, load_num_s, load_num):
 # CPU情報取得メソッド
 if __name__ == '__main__':
     # 1-5回webページをロードして記録
-    multi_process_cpu(url='https://google.co.jp', load_num_s=1, load_num=5)
+    multi_process_cpu(url='https://google.co.jp', load_num_s=1, load_num=1)
