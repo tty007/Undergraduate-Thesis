@@ -60,7 +60,20 @@ def multi_process_cpu(url):
     thread = Pool(10)
     # ここでページをロード...関数を9回起動するので，cpu_info内に書くとタブが9回開いてしまう
     load_webpage(url)
-    thread.map(cpu_info, range(9))
+    # thread.map(cpu_info, range(9))
+
+    load_times = 10
+    times = 1
+    cpu_num_list = []
+    # タイムアウトでファイル実行が中止になってしまう為，エラーハンドリングが必要
+    for times in range (1, load_times):
+        for cpu_num in range(9):
+            file_num = str(cpu_num) + '_' + str(times)
+            cpu_num_list.append(file_num)
+            cpu_num += 1
+        thread.map(cpu_info, cpu_num_list)
+        load_times += 1
+    
 
 
 # =========実行==========
