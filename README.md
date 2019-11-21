@@ -116,7 +116,8 @@ machdep.cpu.thread_count: 12
 ~~4. CPU周波数と，CPU負荷，同時に取得しながら記録する方法~~
   ⇨Clear
 
-5. CPU_SCALING_FREQENCYの差分を取らずに，そのままデータフレームに結合かつ他のカラムはdiff(差分)を取ったCSVファイルの作成
+~~5. CPU_SCALING_FREQENCYの差分を取らずに，そのままデータフレームに結合かつ他のカラムはdiff(差分)を取ったCSVファイルの作成~~
+  ⇨Clear
 6. 求めた特徴量(リサンプリングデータ)からCPU_LOADを計算し，別ファイルに出力（これがトレーニングデータとなる）
 
 ⬇️重回帰
