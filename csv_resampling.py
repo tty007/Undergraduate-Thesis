@@ -8,7 +8,7 @@ def resample_csv(cpu_id):
     df = df.set_index('time')
     new_df = df.resample('100L').mean()
     print(new_df)
-    diff_df = new_df.diff(axis='index')
+    diff_df = pd.concat([new_df[['user','nice','system','idle','iowait','irq','softirq','steal']].diff(), new_df['cpu_scaling_freq']], axis=1)
 
     row_num = 0
     swap_list = []
