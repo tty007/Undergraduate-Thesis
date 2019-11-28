@@ -14,9 +14,9 @@ def load_webpage(url):
         -d {}".format(url), shell=True)
 
 
-@timeout_decorator.timeout(8)
+@timeout_decorator.timeout(10)
 def read_process_figure(name):
-    with open('csv_data/wikipedia/{}.csv'.format(name), 'w', newline='') as csvfile:
+    with open('csv_data/rakuten/{}.csv'.format(name), 'w', newline='') as csvfile:
         fieldnames = ['time','USER', 'PID', 'PPID', 'VSZ', 'RSS', 'WCHAN', 'ADDR', 'S', 'NAME']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -34,11 +34,11 @@ def read_process_figure(name):
 
 
 def run_proposed(num):
-    load_webpage('https://wikipedia.org')
+    load_webpage('https://rakuten.co.jp')
 
     try:
         print(str(num) + '回目の実行')
-        file_name = 'wikipedia_' + str(num)
+        file_name = 'rakuten_' + str(num)
         read_process_figure(file_name)
     except timeout_decorator.timeout_decorator.TimeoutError:
         if num < 50:
