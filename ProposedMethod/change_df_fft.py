@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 
@@ -11,7 +12,7 @@ def return_fft(df):
     N = 64 #サンプル数
     # 窓関数
     hw = np.hamming(N) #ハミング窓
-    data = df['VSZ'].values[1:65]
+    data = df['RSS'].values[1:65]
     windowData = hw * data
     # フーリエ変換
     F = np.fft.fft(windowData)
@@ -48,4 +49,4 @@ wikipedia = change_df_fft('wikipedia', 3)
 one_df = pd.concat([amazon,apple,wikipedia])
 print(one_df.reset_index(drop=True))
 
-one_df.to_csv('fft_csv/all_data.csv')
+one_df.to_csv('fft_csv/all_data_RSS.csv')
