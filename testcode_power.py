@@ -2,9 +2,9 @@ import serial
 import sys
 import datetime
 
-# h = serial.Serial("/dev/tty.UM24C-Port",baudrate=9600,timeout=0.5)
+h = serial.Serial("/dev/tty.URT1",baudrate=9600,timeout=0.5)
 # win用
-h = serial.Serial("COM5",baudrate=9600,timeout=1.5)
+# h = serial.Serial("COM5",baudrate=9600,timeout=1.5)
 
 def getPowerInfo(h):
   h.write(b"\xf0")
