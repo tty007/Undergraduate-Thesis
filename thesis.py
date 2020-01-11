@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import time
-# import timeout_decorator
 from multiprocessing import Pool
 import subprocess
 import re
@@ -10,36 +9,6 @@ import math
 
 import serial
 import sys
-# from threading import Thread
-# import functools
-
-# タイムアウトデコレータ：illegal errorが出るため不採用
-# def timeout(seconds_before_timeout):
-#     def deco(func):
-#         @functools.wraps(func)
-#         def wrapper(*args, **kwargs):
-#             res = [Exception('関数[%s]は設定時間により終了 [%s seconds] 超過!' % (func.__name__, seconds_before_timeout))]
-#             def newFunc():
-#                 try:
-#                     res[0] = func(*args, **kwargs)
-#                 except Exception as e:
-#                     res[0] = e
-#             t = Thread(target=newFunc)
-#             t.daemon = True
-#             try:
-#                 t.start()
-#                 t.join(seconds_before_timeout)
-#             except Exception as e:
-#                 print('error starting thread')
-#                 raise e
-
-#             ret = res[0]
-#             if isinstance(ret, BaseException):
-#                 raise ret
-#             return ret
-#         return wrapper
-#     return deco
-
 
 def load_webpage(url):
     subprocess.call("adb shell am start \
@@ -62,11 +31,9 @@ def get_cpu_scaling_freq(cpu_id):
 
 # CPU_ID/ =0:cpu_all(全体の合計), =1:cpu_1, =2:cpu_2, =3:cpu_3, =4:cpu_4/CPU_load+freq取得関連メソッド
 # CPUそれぞれの関数を一つにまとめて簡略化&リサイクル
-# @timeout_decorator.timeout(8)
-# @timeout(8)
 def cpu_info(cpu_id):
 
-    with open("csv_data/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
+    with open("csv_data/google/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
         fieldnames = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'cpu_scaling_freq', 'time']
         writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=",", quotechar='"', lineterminator='\n')
         writer.writeheader()
@@ -90,25 +57,17 @@ def cpu_info(cpu_id):
                 # 文字列をraw文字列に変換
                 cpu_scaling_freq = repr(cpu_scaling_freq)[1:-4]
                 cpu_info.append(cpu_scaling_freq)
-                # print(cpu_scaling_freq)
 
             # print(cpu_info)
             # ['11307', '3696', '15399', '5489320', '3844', '3350', '2573', '0', '151680']
-            # ['30240', '3591', '37054', '5440716', '2344', '8496', '3932', '0', '170880']
-            # ['24872', '5339', '14072', '5479520', '1736', '4280', '1834', '0', '82560']
-            # ['15997', '5220', '41020', '5423250', '15259', '12233', '9241', '0', '170880']
             
             cpu_index = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'cpu_scaling_freq']
             cpu_info = dict(zip(cpu_index, cpu_info))
             time = datetime.datetime.now().strftime('%H:%M:%S:%f')
             time = dict(time=time)
             cpu_info.update(time)
-
-            # print(cpu_info)
+            
             # {'user': '88737', 'nice': '33606', 'system': '158487', 'idle': '39579366', 'iowait': '47113', 'irq': '41731', 'softirq': '34605', 'steal': '0', 'time': '15:56:18:921850'}
-            # {'user': '10331', 'nice': '3454', 'system': '24313', 'idle': '4936695', 'iowait': '8859', 'irq': '6233', 'softirq': '5888', 'steal': '0', 'cpu_scaling_freq': '1708800\r', 'time': '15:56:20:376885'}
-            # {'user': '10389', 'nice': '4729', 'system': '28768', 'idle': '4925090', 'iowait': '14129', 'irq': '7752', 'softirq': '6777', 'steal': '0', 'cpu_scaling_freq': '1708800\r', 'time': '15:56:20:616808'}
-            # {'user': '14960', 'nice': '5151', 'system': '39829', 'idle': '4908467', 'iowait': '11902', 'irq': '9008', 'softirq': '9197', 'steal': '0', 'cpu_scaling_freq': '1708800\r', 'time': '15:56:21:010632'}
             writer.writerow(cpu_info)
 
             # タイムアウト用例外発生部分
@@ -130,7 +89,7 @@ def multi_process_cpu(url, load_num_s, load_num):
             cpu_num_list.append(file_num)
             cpu_num += 1
         thread.map(cpu_info, cpu_num_list)
-        print('next')
+        
     except TimeoutError:
         time.sleep(1)
         if load_num_s <= (load_num-1):
@@ -146,4 +105,4 @@ def multi_process_cpu(url, load_num_s, load_num):
 # CPU情報取得メソッド
 if __name__ == '__main__':
     # 1-5回webページをロードして記録
-    multi_process_cpu(url='https://google.co.jp', load_num_s=1, load_num=2)
+    multi_process_cpu(url='https://google.co.jp', load_num_s=1, load_num=50)
