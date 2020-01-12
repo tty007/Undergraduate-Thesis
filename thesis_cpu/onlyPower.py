@@ -30,7 +30,7 @@ def nowtime():
 # CPUそれぞれの関数を一つにまとめて簡略化&リサイクル
 def power_info(load_num):
     # import pdb; pdb.set_trace()
-    with open("only_power_data/amazon/p_{0}.csv".format(str(load_num)), "w", newline="") as f:
+    with open("only_power_data/vimeo/p_{0}.csv".format(str(load_num)), "w", newline="") as f:
         fieldnames = ['time', 'w']
         writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=",", quotechar='"', lineterminator='\n')
         writer.writeheader()
@@ -80,4 +80,4 @@ def process_cpu(url, load_num_s, load_num):
 # CPU情報取得メソッド
 if __name__ == '__main__':
     # 1-5回webページをロードして記録
-    process_cpu(url='https://amazon.com', load_num_s=1, load_num=50)
+    process_cpu(url='https://vimeo.com', load_num_s=1, load_num=50)
