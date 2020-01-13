@@ -2,12 +2,14 @@ import pandas as pd
 import numpy as np
 
 def resample_csv(cpu_id):
-    df = pd.read_csv('csv_data/cpu_' + str(cpu_id) + '.csv')
+    df = pd.read_csv('csv_data/vimeo/cpu_' + str(cpu_id) + '.csv')
     
     df['time'] = pd.to_datetime(df['time'], format='%H:%M:%S:%f')
     df = df.set_index('time')
     new_df = df.resample('100L').mean()
+    # 差分をとる場合
     diff_df = pd.concat([new_df[['user','nice','system','idle','iowait','irq','softirq','steal']].diff(), new_df['cpu_scaling_freq']], axis=1)
+    # diff_df = pd.concat([new_df[['user','nice','system','idle','iowait','irq','softirq','steal']], new_df['cpu_scaling_freq']], axis=1)
 
     row_num = 0
     swap_list = []
@@ -19,7 +21,7 @@ def resample_csv(cpu_id):
     diff_df.index = swap_list
     diff_df.index.names = ['time[ms]']
     final_df = diff_df
-    final_df.to_csv('csv_resample_data/cpu_' + str(cpu_id) + '.csv')
+    final_df.to_csv('csv_resample_data/vimeo/cpu_' + str(cpu_id) + '.csv')
 
 
 def file_name(load_num):
@@ -38,7 +40,7 @@ def file_name(load_num):
 
 def run_resampling():
     # load_num(ページ更新回数：データの回数分の個数)を手動で指定
-    file_id_list = file_name(load_num=5)
+    file_id_list = file_name(load_num=50)
     for index, item in enumerate(file_id_list):
         resample_csv(file_id_list[index])
     
