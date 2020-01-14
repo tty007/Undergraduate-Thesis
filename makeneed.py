@@ -14,7 +14,9 @@ def concat(sitename):
         # フォルダ中の全csvをマージ
         list = []
         for file in All_Files:
-            list.append(pd.read_csv(file))
+            data = pd.read_csv(file)
+            new_data = data.assign(cpu=i, sitename=sitename)
+            list.append(new_data)
         df = pd.concat(list, sort=False)
         df.to_csv('need/{0}/cpu_{1}.csv'.format(sitename, i), encoding='utf_8')
 
