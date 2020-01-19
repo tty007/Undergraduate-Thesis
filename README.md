@@ -128,3 +128,5 @@ machdep.cpu.thread_count: 12
 `vsz_rss.py`のURL,保存先フォルダ名,ファイル名の名前をサイトごとに変更し，実行
 ↓
 `change_rate_csv.py`のURL,保存先フォルダ名,ファイル名の名前をサイトごとに変更し，実行
+
+`thesis_cpu/onlyPower.py`でサイトごとに電力データのみを取得
