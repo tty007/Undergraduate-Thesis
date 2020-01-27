@@ -33,7 +33,7 @@ def get_cpu_scaling_freq(cpu_id):
 # CPUそれぞれの関数を一つにまとめて簡略化&リサイクル
 def cpu_info(cpu_id):
 
-    with open("csv_data/vimeo/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
+    with open("csv_data/google/cpu_{0}.csv".format(str(cpu_id)), "w", newline="") as f:
         fieldnames = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'cpu_scaling_freq', 'time']
         writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=",", quotechar='"', lineterminator='\n')
         writer.writeheader()
@@ -105,4 +105,4 @@ def multi_process_cpu(url, load_num_s, load_num):
 # CPU情報取得メソッド
 if __name__ == '__main__':
     # 1-5回webページをロードして記録
-    multi_process_cpu(url='https://vimeo.com', load_num_s=1, load_num=50)
+    multi_process_cpu(url='https://google.com', load_num_s=51, load_num=100)

@@ -129,4 +129,7 @@ machdep.cpu.thread_count: 12
 ↓
 `change_rate_csv.py`のURL,保存先フォルダ名,ファイル名の名前をサイトごとに変更し，実行
 
-`thesis_cpu/onlyPower.py`でサイトごとに電力データのみを取得
+# 従来手法データ集め
+- `thesis_cpu/onlyPower.py`でサイトごとに電力データのみを取得（1-100）
+- `thesis.py`でサイトごとにCPUの必要情報をマルチプロセスで取得（1-100）
+↓
